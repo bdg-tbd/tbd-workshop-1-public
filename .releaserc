@@ -1,0 +1,46 @@
+{
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+     "@semantic-release/release-notes-generator",
+     "@semantic-release/github",
+  ],
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {
+          "tag": "breaking",
+          "release": "major"
+        },
+        {
+          "tag": "new",
+          "release": "minor"
+        },
+        {
+          "tag": "feat",
+          "release": "minor"
+        },
+        {
+          "tag": "fix",
+          "release": "patch"
+        },
+        {
+          "tag": "doc",
+          "release": "patch"
+        },
+        {
+          "subject": "*",
+          "release": "patch"
+        },
+        {
+          "scope": "no-release",
+          "release": false
+        }
+      ],
+      "parserOpts": {
+        "noteKeywords": [
+          "BREAKING CHANGE",
+          "BREAKING CHANGES"
+        ]
+      }
+    }
+}
