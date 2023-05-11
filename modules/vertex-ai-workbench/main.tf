@@ -54,9 +54,10 @@ resource "google_notebooks_instance" "tbd_notebook" {
     repository = var.ai_notebook_image_repository
     tag        = var.ai_notebook_image_tag
   }
-  network = var.network
-  subnet  = var.subnet
+  network             = var.network
+  subnet              = var.subnet
   instance_owners     = [var.ai_notebook_instance_owner]
   post_startup_script = "gs://${google_storage_bucket_object.post-startup.bucket}/${google_storage_bucket_object.post-startup.name}"
+  no_public_ip        = true
 }
 
