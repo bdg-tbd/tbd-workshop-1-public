@@ -9,7 +9,7 @@ resource "google_project" "tbd_project" {
   ## change it to break the checkov during the labs
   auto_create_network = false
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
