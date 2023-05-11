@@ -75,18 +75,85 @@ cd ..
 Please do not edit and hardcode these values in a YAML but set the Github Actions secrets instead
 while preserving the secret names, i.e. `GCP_WORKLOAD_IDENTITY_PROVIDER_NAME` and `GCP_WORKLOAD_IDENTITY_SA_EMAIL`.
 ![img.png](doc/figures/secrets.png)
+
 5. Install and configure `pre-commit`
 ```bash
 pre-commit install
 ```
 
-6. Commit changes, push to a branch and open a PR to **YOUR** repository main/master branch.
-If you see a warning like this -- please enable the workflows:
-![img.png](doc/figures/workflow.png)
-   ...and repush your changes!
+6. Run all linters locally:
+```bash
+pre-commit run --all-files --config .pre-commit-config.yaml --verbose
+```
 **TASKS to do**
 * If pre-commit linters report any issues please try to **fix** them :hammer_and_wrench:.
+
+```text
+(base) ➜  tbd-workshop-1-public git:(feat/init-workshop-1) ✗ pre-commit run --all-files --config .pre-commit-config.yaml
+Terraform fmt............................................................Passed
+Terraform validate.......................................................Passed
+Terraform docs...........................................................Passed
+Terraform validate with tflint...........................................Passed
+Checkov..................................................................Failed
+- hook id: terraform_checkov
+- exit code: 1
+
+terraform scan results:
+
+Passed checks: 44, Failed checks: 1, Skipped checks: 14
+
+Check: CKV_GCP_89: "Ensure Vertex AI instances are private"
+        FAILED for resource: module.vertex_ai_workbench.google_notebooks_instance.tbd_notebook
+        File: /modules/vertex-ai-workbench/main.tf:48-61
+        Calling File: /main.tf:29-39
+        Guide: https://docs.bridgecrew.io/docs/ensure-gcp-vertex-ai-workbench-does-not-have-public-ips
+
+                48 | resource "google_notebooks_instance" "tbd_notebook" {
+                49 |   depends_on   = [google_project_service.notebooks]
+                50 |   location     = local.zone
+                51 |   machine_type = "e2-standard-2"
+                52 |   name         = "${var.project_name}-notebook"
+                53 |   container_image {
+                54 |     repository = var.ai_notebook_image_repository
+                55 |     tag        = var.ai_notebook_image_tag
+                56 |   }
+                57 |   network             = var.network
+                58 |   subnet              = var.subnet
+                59 |   instance_owners     = [var.ai_notebook_instance_owner]
+                60 |   post_startup_script = "gs://${google_storage_bucket_object.post-startup.bucket}/${google_storage_bucket_object.post-startup.name}"
+                61 | }
+
+dockerfile scan results:
+
+Passed checks: 103, Failed checks: 1, Skipped checks: 2
+
+Check: CKV_DOCKER_1: "Ensure port 22 is not exposed"
+        FAILED for resource: /modules/docker_image/resources/Dockerfile.EXPOSE
+        File: /modules/docker_image/resources/Dockerfile:30-30
+        Guide: https://docs.bridgecrew.io/docs/ensure-port-22-is-not-exposed
+
+                30 | EXPOSE 8080 16384 16385 4040 22
+github_actions scan results:
+
+Passed checks: 99, Failed checks: 0, Skipped checks: 0
+
+
+
+
+Lint Dockerfiles.........................................................Failed
+- hook id: hadolint
+- exit code: 1
+
+modules/docker_image/resources/Dockerfile:22 DL3013 warning: Pin versions in pip. Instead of `pip install <package>` use `pip install <package>==<version>` or `pip install --requirement <requirements file>`
+
+```
 * Modify Terraform code to use your custom Docker image in Vertex AI Workbench
+
+Commit changes, push to a branch and open a PR to **YOUR** repository main/master branch.
+If you see a warning like this -- please enable the workflows:
+![img.png](doc/figures/workflow.png)
+...and repush your changes!
+
 Once all Pull Requests checks **have passed** please merge your PR and wait until your release job finishes.
 7. Navigate to the Vertex AI Workbench menu item, find your notebook on the list, press **CONNECT** and follow
 the instructions
@@ -111,6 +178,7 @@ python3.8 -m ipykernel install --user --name pyspark
 :exclamation: :exclamation: :exclamation: Please remember to **destroy all** the resources after the workshop:
 
 ```bash
+terraform init -backend-config=env/backend.tfvars
 terraform destroy -no-color -var-file env/project.tfvars 
 ```
 
