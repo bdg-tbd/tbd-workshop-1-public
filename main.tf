@@ -35,6 +35,8 @@ module "vertex_ai_workbench" {
   subnet       = module.vpc.subnets[local.notebook_subnet_id].id
 
   ai_notebook_instance_owner = var.ai_notebook_instance_owner
+  ai_notebook_image_repository = element(split(":", module.jupyter_docker_image.jupyter_image_name), 0)
+  ai_notebook_image_tag        = element(split(":", module.jupyter_docker_image.jupyter_image_name), 1)
   ##FIXME: Add custom images from jupyter_docker_image module above here!!!
 }
 
