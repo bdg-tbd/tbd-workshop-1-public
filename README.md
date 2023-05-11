@@ -35,9 +35,9 @@ gcloud auth application-default login
 ```bash
 export TF_VAR_tbd_semester=2023L
 # format: 20xx for teachers, student ID number for students 
-export TF_VAR_user_id=2003
+export TF_VAR_user_id=303688
 # use your own billing account id
-export TF_VAR_billing_account=016F99-F0B167-9A895D
+export TF_VAR_billing_account=018371-8CB4C5-FD56FE
 
 ```
 2. Enter `bootstrap` folder then init project and Terraform state bucket
