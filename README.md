@@ -176,9 +176,20 @@ python3.8 -m ipykernel install --user --name pyspark
 
 
 11. **Workshop 2** exercises are described in [Jupyter notebook](notebooks/workshop_2_mlops.ipynb)
+In order to fetch recent changes to the upstream repository, pls run the following commands:
+```bash
+git checkout master
+git remote add upstream  git@github.com:bdg-tbd/tbd-workshop-1-public.git
+git pull upstream master
+```
+There will be some conflicts but no worries... In order to fix them - just copy the content of the files from the
+upstream repo. Then commit your changes and create another pull request. 
+Please repeat steps *7 and 8* to get env up and running again.
 
 
-12. **IMPORTANT**
+12. Upload [Jupyter notebook](notebooks/workshop_2_mlops.ipynb) and follow the instructions embedded in it.
+
+13. **IMPORTANT**
 :exclamation: :exclamation: :exclamation: Please remember to **destroy all** the resources after the workshop:
 
 ```bash
